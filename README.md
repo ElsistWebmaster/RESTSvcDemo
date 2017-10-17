@@ -1,7 +1,10 @@
-# HolidaysOnCSV
-### IEC61131-3 program, to realize a FB that reads holiday dates from a CSV file.
-#### A ST IEC61131 program.
-This function block looks for holidays in a CSV file. In each row of the file, you must define the date in day/month mode.
-"1/1" 1st of january
-"15/08" 15th of august
-"31/12" 31th of december
+# RESTSvcDemo
+### A complete example of IEC61131-3 PLC program and PHP scripts to manage the REST data exchange.
+This program exchange data with a cloud server by using the REST protocol.
+There are two different PHP scripts that manage the REST data. One use a INI file and the other
+uses a MySQL database. Link to the server Web pages.
+
+http://www.slimline.altervista.org/Mdp095a200/Ptp135a100/Home.htm
+http://www.slimline.altervista.org/Mdp095a200/Ptp144a100/Home.htm
+
+Connecting to this links it's possible to see the SlimLine logic input status and set the logic outputs.
