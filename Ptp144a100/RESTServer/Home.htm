@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>REST Server - Home page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- inclusioni skeleton http://getskeleton.com/ -->
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/skeleton.css">
+<!-- inclusioni stili elsist -->
+<link rel="stylesheet" href="css/estyle.css">
+<!-- inclusioni ulteriori stilizzazioni -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+	// -------------------------------------------------------------------------
+	// FUNZIONE ESEGUITA SU LOAD PAGINA
+	// -------------------------------------------------------------------------
+	// Sul load della pagina attivo ajax.
+
+	$(document).ready(function()
+	{
+		AjaxCall(); //Eseguo chiamata ajax su load pagina
+		setInterval(AjaxCall, 5000); //Imposto chiamata ciclica ajax
+	});
+
+	// -------------------------------------------------------------------------
+	// RICHIESTA AJAX
+	// -------------------------------------------------------------------------
+	// Viene eseguita la richiesta ajax. Eseguo lo script "AjaxSvc.php" passando
+	// i parametri in POST.
+
+	function AjaxCall()
+	{
+		// Compongo byte di gestione comando output.
+
+		var DOut=0x00; //Digital output byte command
+		if ($("#Do00CPU").is(':checked')) DOut+=0x01;
+		if ($("#Do01CPU").is(':checked')) DOut+=0x02;
+
+		// Eseguo invio richiesta ajax con parametri in POST.
+
+		$.ajax(
+		{
+			type:"POST",
+			url:"/Mdp095a200/Ptp144a100/AjaxSvc.php",  
+			data:"UID="+$("#UID").val()+"&DOut="+DOut,
+			dataType:"json",
+
+			// Funzione eseguita su successo della chiamata.
+
+			success:function(Answer)
+			{
+				// Eseguo visualizzazione dati.
+
+				$("#MID").text(Answer.MID);
+				$("#PollTime").text(Answer.PollTime);
+				$("#Resyncs").text(Answer.Resyncs);
+				$("#RxMessage").text(Answer.RxMessage);
+				$("#TxMessage").text(Answer.TxMessage);
+				$("#DInp").text(Answer.DInp);
+				$("#DOut").text(Answer.DOut);
+
+				// Eseguo valorizzazione radio button stato ingressi digitali.
+
+				$("#Di00CPU").prop("checked", (Answer.DInp&0x01?true:false)); 
+				$("#Di01CPU").prop("checked", (Answer.DInp&0x02?true:false)); 
+			},
+
+			// Funzione eseguita su errore chiamata.
+
+			error: function() {$("#RxMessage").text("Call error");}
+		});
+	}
+</script>
+</head>
+<body>
+<!-- .container e il contenitore generale [apertura] -->
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">
+      <h4 class="center"><b>PTP144A100</b> - Pagina consultazione servizio REST</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="twelve columns">
+      <h5 class="center">Impostando l'unique ID del sistema la pagina visualizza in Ajax i dati ricevuti. <span style="color:red">Attenzione utilizzare solo a scopo didattico !</span></h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="six columns"> IMPOSTARE UID SISTEMA: </div>
+    <div class="six columns input-uid">
+      <input class="u-full-width" type="text" id="UID" value="3407887">
+    </div>
+  </div>
+</div>
+<div class="container variables-div">
+  <div class="row">
+    <div class="twelve columns"><b>RISPOSTA DA SCRIPT PHP </b><small>(File: AjaxSvc.php)</small></div>
+  </div>
+  <div class="row">
+    <div class="four columns">MID: <span id="MID">--</span></div>
+    <div class="four columns">PollTime: <span id="PollTime">--</span></div>
+    <div class="four columns">Resyncs: <span id="Resyncs">--</span></div>
+  </div>
+  <div class="row">
+    <div class="twelve columns">RxMessage: <span id="RxMessage">--</span></div>
+    </div>
+    <div class="row">
+    <div class="twelve columns">TxMessage: <span id="TxMessage">--</span></div>
+    </div>
+  </div>
+<div class="container">
+  <div class="row">
+    <div class="twelve columns">Ingressi digitali:</div>
+  </div>
+  <div class="row">
+    <div class="six columns">
+      <input type="checkbox" id="Di00CPU" class="checkbox-io" disabled><span class="label-io"> Di00</span>
+    </div>
+    <div class="six columns">
+      <input type="checkbox" id="Di01CPU" class="checkbox-io" disabled><span class="label-io"> Di01</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="twelve columns"> Uscite digitali: </div>
+  </div>
+  <div class="row">
+  <uscite>
+    <div class="six columns">
+      <input type="checkbox" id="Do00CPU" class="checkbox-io"><span class="label-io"> Do00</span>
+    </div>
+    <div class="six columns">
+      <input type="checkbox" id="Do01CPU" class="checkbox-io"><span class="label-io"> Do01</span>
+    </div>
+  </uscite>
+  </div>
+</div>
+</body>
+</html>
